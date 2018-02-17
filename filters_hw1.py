@@ -3,16 +3,16 @@
 #Tarea 1
 
 import numpy as np 
-from scipy import misc
+# from scipy import misc
 import matplotlib.pyplot as plt
+from PIL import Image
 
-f = misc.imread('img2.jpg')
-
-print(len(f))
-print(len(f[0]))
+image = Image.open('img1.jpg')
+pixels = np.array(image)
 
 #ESCALA DE GRISES 
-def grayScale(img):
+def grayScale(image):
+	img = image.copy()
 	rangeI = range(len(img))
 	rangeJ =range (len(img[0]))
 	for i in rangeI:
@@ -22,28 +22,32 @@ def grayScale(img):
 	return img
 
 #ROJO
-def red(img):
+def red(image):
+	img = image.copy()
 	for i in range(len(img)):
 		for j in range (len(img[i])):
 			img[i,j] = [img[i,j][0], 0, 0]
 	return img
 
 #VERDE
-def green(img):
+def green(image):
+	img = image.copy()
 	for i in range(len(img)):
 		for j in range (len(img[i])):
 			img[i,j] = [0, img[i,j][1], 0]
 	return img
 #AZUL
 
-def blue(img):
+def blue(image):
+	img = image.copy()
 	for i in range(len(img)):
 		for j in range (len(img[i])):
 			img[i,j] = [0, 0, img[i,j][2]]
 	return img
 
 #INVERSO
-def inverse(img):
+def inverse(image):
+	img = image.copy()
 	for i in range(len(img)):
 		for j in range (len(img[i])):
 			rgb = img[i,j]
@@ -51,7 +55,8 @@ def inverse(img):
 	return img
 
 #RGB
-def componenteRGB(img, r, g, b):
+def componenteRGB(image, r, g, b):
+	img = image.copy()
 	for i in range(len(img)):
 		for j in range (len(img[i])):
 			img[i,j] = componentRGBPixel(img[i,j], r, g, b)
@@ -73,7 +78,8 @@ def componentRGBPixel(rgb, r, g, b):
 		new_b = 0
 	return [new_r, new_g, new_b]
 
-def highContrast(img):
+def highContrast(image):
+	img = image.copy()
 	img = grayScale(img)
 	for i in range(len(img)):
 		for j in range(len(img[i])):
@@ -81,10 +87,37 @@ def highContrast(img):
 			img[i,j] = [255, 255, 255] if rgb[0] > 125 else [0,0,0]
 	return img 
 
+def mosaic(image, pixelSize):
+	img = image.copy()
+	img = img.resize((int(img.size[0]/pixelSize), int(img.size[1]/pixelSize)), Image.NEAREST)
+	img = img.resize((img.size[0]*pixelSize, img.size[1]*pixelSize), Image.NEAREST)
+	return img
+
 #def mosaic(img):
 #	for i in range(len(img)):
 #		for j in range(len(img[i]))
 
-plt.imshow(grayScale(f))
+plt.imshow(grayScale(pixels))
+plt.show()
+
+plt.imshow(red(pixels))
+plt.show()
+
+plt.imshow(green(pixels))
+plt.show()
+
+plt.imshow(blue(pixels))
+plt.show()
+
+plt.imshow(inverse(pixels))
+plt.show()
+
+plt.imshow(componenteRGB(pixels, 200,100,0))
+plt.show()
+
+plt.imshow(highContrast(pixels))
+plt.show()
+
+plt.imshow(mosaic(image, 35))
 plt.show()
 
